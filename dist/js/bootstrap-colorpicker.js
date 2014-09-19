@@ -31,6 +31,11 @@
             this.origFormat = null; // original string format
             if (val) {
                 if (val.toLowerCase !== undefined) {
+                    // cast to string
+                    val = val + '';
+                    if (val.charAt(0) !== "#" && (val.length === 3 || val.length === 6)) {
+                        val = '#' + val;
+                    }
                     this.setColor(val);
                 } else if (val.h !== undefined) {
                     this.value = val;
@@ -633,6 +638,15 @@
                     'click.colorpicker': $.proxy(this.show, this)
                 });
             }
+
+            // for HTML5 input[type='color']
+            if ((this.input !== false) && (this.component !== false) && (this.input.attr('type') === 'color')) {
+
+                this.input.on({
+                    'click.colorpicker': $.proxy(this.show, this),
+                    'focus.colorpicker': $.proxy(this.show, this)
+                });
+            }
             this.update();
 
             $($.proxy(function() {
@@ -661,7 +675,7 @@
                 });
             },
             reposition: function() {
-                if (this.options.inline !== false) {
+                if (this.options.inline !== false || this.options.container) {
                     return false;
                 }
                 var type = this.container && this.container[0] !== document.body ? 'position' : 'offset';
@@ -678,7 +692,7 @@
                 this.picker.addClass('colorpicker-visible').removeClass('colorpicker-hidden');
                 this.reposition();
                 $(window).on('resize.colorpicker', $.proxy(this.reposition, this));
-                if (!this.hasInput() && e) {
+                if (e && (!this.hasInput() || this.input.attr('type') === 'color')) {
                     if (e.stopPropagation && e.preventDefault) {
                         e.stopPropagation();
                         e.preventDefault();
@@ -694,7 +708,10 @@
                     color: this.color
                 });
             },
-            hide: function() {
+            hide: function(event) {
+                if (event && (event.target == this.element.get(0))) {
+                    return;
+                }
                 this.picker.addClass('colorpicker-hidden').removeClass('colorpicker-visible');
                 $(window).off('resize.colorpicker', this.reposition);
                 $(document).off({
@@ -879,10 +896,10 @@
                 this.currentSlider.guide.left = left + 'px';
                 this.currentSlider.guide.top = top + 'px';
                 if (this.currentSlider.callLeft) {
-                    this.color[this.currentSlider.callLeft].call(this.color, left / 100);
+                    this.color[this.currentSlider.callLeft].call(this.color, left / this.currentSlider.maxLeft);
                 }
                 if (this.currentSlider.callTop) {
-                    this.color[this.currentSlider.callTop].call(this.color, top / 100);
+                    this.color[this.currentSlider.callTop].call(this.color, top / this.currentSlider.maxTop);
                 }
                 this.update(true);
 
