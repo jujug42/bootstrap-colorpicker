@@ -1,11 +1,11 @@
 {
-  "name": "mjolnic-bootstrap-colorpicker",
+  "name": "jujug42-bootstrap-colorpicker",
   "version": "2.0.0",
   "description": "Colorpicker plugin for Twitter Bootstrap",
   "homepage": "http://mjolnic.github.io/bootstrap-colorpicker/",
   "repository": {
     "type": "git",
-    "url": "git@github.com:mjolnic/bootstrap-colorpicker.git"
+    "url": "git@github.com:jujug42/bootstrap-colorpicker.git"
   },
   "bugs": {
     "url" : "https://github.com/mjolnic/bootstrap-colorpicker/issues"
